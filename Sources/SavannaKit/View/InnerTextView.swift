@@ -22,8 +22,8 @@ import CoreGraphics
     @objc optional func undoManager() -> UndoManager?
 }
 
-class InnerTextView: TextView {
-    override var undoManager: UndoManager? {
+@objc open class InnerTextView: TextView {
+    @objc public override var undoManager: UndoManager? {
         if let innerDelegate = innerDelegate {
             if let undoManager = innerDelegate.undoManager {
                 return undoManager()
