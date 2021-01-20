@@ -15,11 +15,23 @@ import CoreGraphics
 	import UIKit
 #endif
 
-protocol InnerTextViewDelegate: class {
+@objc protocol InnerTextViewDelegate: class {
 	func didUpdateCursorFloatingState()
+    
+    // Optional override for which UndoManager (or subclass of one) to use:
+    @objc optional func undoManager() -> UndoManager?
 }
 
 class InnerTextView: TextView {
+    override var undoManager: UndoManager? {
+        if let innerDelegate = innerDelegate {
+            if let undoManager = innerDelegate.undoManager {
+                return undoManager()
+            }
+        }
+        
+        return super.undoManager
+    }
 	
 	weak var innerDelegate: InnerTextViewDelegate?
 	
