@@ -22,8 +22,8 @@ import CoreGraphics
     @objc optional func undoManager() -> UndoManager?
 }
 
-class InnerTextView: TextView {
-    override var undoManager: UndoManager? {
+@objc open class InnerTextView: TextView {
+    @objc public override var undoManager: UndoManager? {
         if let innerDelegate = innerDelegate {
             if let undoManager = innerDelegate.undoManager {
                 return undoManager()
@@ -33,7 +33,7 @@ class InnerTextView: TextView {
         return super.undoManager
     }
 	
-	weak var innerDelegate: InnerTextViewDelegate?
+	@objc weak var innerDelegate: InnerTextViewDelegate?
 	
 	var theme: SyntaxColorTheme?
 	
@@ -62,7 +62,7 @@ class InnerTextView: TextView {
 	
 	var isCursorFloating = false
 	
-	override func beginFloatingCursor(at point: CGPoint) {
+    open override func beginFloatingCursor(at point: CGPoint) {
 		super.beginFloatingCursor(at: point)
 		
 		isCursorFloating = true
@@ -70,7 +70,7 @@ class InnerTextView: TextView {
 
 	}
 	
-	override func endFloatingCursor() {
+    open override func endFloatingCursor() {
 		super.endFloatingCursor()
 		
 		isCursorFloating = false
@@ -166,7 +166,7 @@ class InnerTextView: TextView {
 	
 	#if os(iOS)
 	
-	override func caretRect(for position: UITextPosition) -> CGRect {
+    open override func caretRect(for position: UITextPosition) -> CGRect {
 		
 		var superRect = super.caretRect(for: position)
 		
