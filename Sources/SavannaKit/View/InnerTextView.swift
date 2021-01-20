@@ -19,21 +19,23 @@ import CoreGraphics
 	func didUpdateCursorFloatingState()
     
     // Optional override for which UndoManager (or subclass of one) to use:
-    @objc optional func undoManager() -> UndoManager?
+    @objc optional func getUndoManager() -> UndoManager?
 }
 
-@objc open class InnerTextView: TextView {
-    @objc public override var undoManager: UndoManager? {
+class InnerTextView: TextView {
+    override var undoManager: UndoManager? {
         if let innerDelegate = innerDelegate {
-            if let undoManager = innerDelegate.undoManager {
-                return undoManager()
+            if let getUndoManager = innerDelegate.getUndoManager {
+                if let res = getUndoManager() {
+                    return res
+                }
             }
         }
         
         return super.undoManager
     }
 	
-	@objc weak var innerDelegate: InnerTextViewDelegate?
+	weak var innerDelegate: InnerTextViewDelegate?
 	
 	var theme: SyntaxColorTheme?
 	

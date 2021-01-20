@@ -22,7 +22,6 @@ public protocol SyntaxTextViewDelegate: class {
 	func didChangeSelectedRange(_ syntaxTextView: SyntaxTextView, selectedRange: NSRange)
 	
 	func lexerForSource(_ source: String) -> Lexer
-	
 }
 
 struct ThemeInfo {
@@ -37,12 +36,27 @@ struct ThemeInfo {
 
 @IBDesignable
 open class SyntaxTextView: View {
-
+    @objc open override var undoManager: UndoManager? {
+        if let undoManagerOverride = undoManagerOverride {
+            if let undoManager = undoManagerOverride() {
+                return undoManager
+            }
+        }
+        
+//        return super.undoManager
+        return nil // Makes InnerTextView use its own undoManager
+    }
+    @objc func getUndoManager() -> UndoManager? {
+        return undoManager
+    }
+    // Optional override for which UndoManager (or subclass of one) to use:
+    open var undoManagerOverride: (() -> UndoManager?)? = nil
+    
 	var previousSelectedRange: NSRange?
 	
 	private var textViewSelectedRangeObserver: NSKeyValueObservation?
 
-	public let textView: InnerTextView
+	let textView: InnerTextView
 	
 	public var contentTextView: TextView {
 		return textView
